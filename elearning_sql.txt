@@ -1,0 +1,195 @@
+
+drop table assignment_marks;
+drop table assignment;
+drop table lecture;
+drop table study_material;
+drop table student_exam;
+drop table examination;
+drop table student_course_registration;
+drop table course;
+drop table instructor;
+drop table student;
+drop table program;
+
+create table program(
+program_id int,
+program_name varchar(20),
+courses_count int,
+PRIMARY KEY (program_id)
+);
+
+
+
+create table student(
+student_id varchar(10) NOT NULL,
+first_name varchar(12) NOT NULL,
+last_name varchar(12) NOT NULL,
+phone varchar(15) NOT NULL,
+semester varchar(10) NOT NULL,
+email varchar(50) NOT NULL,
+password varchar(20) NOT NULL,
+program_id int NOT NULL,
+PRIMARY KEY(student_id),
+FOREIGN KEY (program_id) REFERENCES program(program_id)
+);
+
+create table instructor(
+instructor_id varchar(10) NOT NULL,
+first_name varchar(12) NOT NULL,
+last_name varchar(12) NOT NULL,
+phone varchar(15) NOT NULL,
+semester varchar(10) NOT NULL,
+email varchar(50) NOT NULL,
+password varchar(20) NOT NULL,
+experience int,
+salary decimal(10,2),
+PRIMARY KEY(instructor_id)
+);
+
+create table course(
+course_id int NOT NULL,
+course_name varchar(50) NOT NULL,
+prerequisite varchar(50) NOT NULL,
+program_id int NOT NULL,
+credit_hours int,
+PRIMARY KEY(course_id),
+FOREIGN KEY (program_id) REFERENCES program(program_id)
+);
+
+create table student_course_registration(
+course_id int NOT NULL,
+student_id varchar(10) NOT NULL,
+FOREIGN KEY(course_id) REFERENCES course(course_id),
+FOREIGN KEY(student_id) REFERENCES student(student_id)
+);
+
+create table examination(
+exam_id int NOT NULL,
+course_id int NOT NULL,
+instructor_id varchar(10) NOT NULL,
+exam_date date,
+exam_type varchar(20),
+PRIMARY KEY (exam_id),
+FOREIGN KEY(instructor_id) REFERENCES instructor(instructor_id),
+FOREIGN KEY(course_id) REFERENCES course(course_id)
+);
+
+create table student_exam(
+student_id varchar(10) NOT NULL,
+exam_id int NOT NULL,
+marks int NOT NULL,
+FOREIGN KEY(student_id) REFERENCES student(student_id),
+FOREIGN KEY(exam_id) REFERENCES examination(exam_id)
+);
+
+create table study_material(
+material_id int NOT NULL,
+course_id int NOT NULL,
+instructor_id varchar(10) NOT NULL,
+material_type varchar(20),
+PRIMARY KEY(material_id),
+FOREIGN KEY(course_id) REFERENCES course(course_id),
+FOREIGN KEY(instructor_id) REFERENCES instructor(instructor_id)
+);
+
+create table lecture(
+lecture_id int NOT NULL,
+course_id int NOT NULL,
+student_id varchar(10) NOT NULL,
+instructor_id varchar(10) NOT NULL,
+topic varchar(150),
+PRIMARY KEY(lecture_id),
+FOREIGN KEY(course_id) REFERENCES course(course_id),
+FOREIGN KEY(student_id) REFERENCES student(student_id),
+FOREIGN KEY(instructor_id) REFERENCES instructor(instructor_id)
+);
+
+create table assignment(
+assignment_id int NOT NULL,
+course_id int NOT NULL,
+due_date date,
+PRIMARY KEY(assignment_id),
+FOREIGN KEY(course_id) REFERENCES course(course_id)
+);
+
+create table assignment_marks(
+assignment_id int NOT NULL,
+student_id varchar(10) NOT NULL,
+total_marks int,
+scored_marks int,
+FOREIGN KEY(student_id) REFERENCES student(student_id),
+FOREIGN KEY(assignment_id) REFERENCES assignment(assignment_id)
+);
+
+
+
+
+
+INSERT INTO program  VALUES (001,'Data Analytics',4);
+INSERT INTO program  VALUES (002,'Biotechnology',3);
+INSERT INTO program  VALUES (003,'Electronics',4);
+INSERT INTO program  VALUES (004,'Mechanical',3);
+
+INSERT INTO student VALUES ('UCSE21001','Adam','Bright','+91-9771488667','4th sem','ucse21001@xstu.xim.edu.in','yuyop889',001);
+INSERT INTO student VALUES ('UCSE20003','Nick','Thomas','+91-9771488997','5th sem','ucse21003@xstu.xim.edu.in','yytht809',001);
+INSERT INTO student VALUES ('UCSE22017','Charles','Leclerc','+91-9771439667','2nd sem','ucse21017@xstu.xim.edu.in','ertkn889',002);
+INSERT INTO student VALUES ('UCSE21034','Louris','Bratt','+91-9771478907','4th sem','ucse21034@xstu.xim.edu.in','iu9uo889',003);
+INSERT INTO student VALUES ('UCSE19056','Smita','Paul','+91-9771588449','8th sem','ucse21056@xstu.xim.edu.in','sd90y889',004);
+INSERT INTO student VALUES ('UCSE21024','Om','Chaudhary','+91-9771388667','4th sem','ucse21024@xstu.xim.edu.in','gh34ngjh',003);
+INSERT INTO student VALUES ('UCSE21002','Alexa','Bliss','+91-9771768667','3rd sem','ucse21002@xstu.xim.edu.in','esefc670',003);
+INSERT INTO student VALUES ('UCSE22001','Andrew','Mathew','+91-9771489667','5th sem','ucse22001@xstu.xim.edu.in','waewx568',002);
+
+INSERT INTO instructor VALUES ('T001','Scarlet','Wing','+91-9731988281','2nd sem','scarlet1@xim.edu.in','not789r5u',4,50000);
+INSERT INTO instructor VALUES ('T002','Tom','Helson','+91-7712988281','4thsem','tom2@xim.edu.in','trh099igf',1,37500);
+INSERT INTO instructor VALUES ('T003','Rayon','Hash','+91-793198890','3rd sem','rayon3@xim.edu.in','53aeusi77',3,45000);
+INSERT INTO instructor VALUES ('T004','Chin','Opo','+91-8788968289','8th sem','chin4@xim.edu.in','esgeshh8',5,55000);
+
+INSERT INTO course VALUES (101,'Query Language','MySQL',001,10);
+INSERT INTO course VALUES (102,'Data Visualization','Database Management',001,5);
+INSERT INTO course VALUES (201,'Human Biology','Basic Anatomy',002,10);
+INSERT INTO course VALUES (202,'Protein Science','Protein Synthesis',002,4);
+INSERT INTO course VALUES (301,'Laboratory Digital Communication','Basic Electronics',003,20);
+INSERT INTO course VALUES (303,'Electronic Devices and Circuits I','Basic Electronics',003,20);
+INSERT INTO course VALUES (401,'Mechanism and Machine design','Kinematics and Dynamics',004,10);
+
+INSERT INTO student_course_registration VALUES (101,'UCSE21001');
+INSERT INTO student_course_registration VALUES (102,'UCSE20003');
+INSERT INTO student_course_registration VALUES (201,'UCSE22017');
+INSERT INTO student_course_registration VALUES (301,'UCSE21034');
+INSERT INTO student_course_registration VALUES (301,'UCSE21024');
+INSERT INTO student_course_registration VALUES (202,'UCSE22001');
+INSERT INTO student_course_registration VALUES (401,'UCSE19056');
+INSERT INTO student_course_registration VALUES (303,'UCSE21002');
+
+INSERT INTO examination  VALUES (1,101,'T004','2023-5-9','Quiz');
+INSERT INTO examination  VALUES (5,201,'T003','2023-5-18','Midsem');
+INSERT INTO examination  VALUES (7,303,'T001','2023-10-11','Endsem');
+INSERT INTO examination  VALUES (8,401,'T002','2023-7-3','Lab Test');
+
+INSERT INTO student_exam  VALUES ('UCSE21001',1,99);
+INSERT INTO student_exam  VALUES ('UCSE22017',5,80);
+INSERT INTO student_exam  VALUES ('UCSE21002',7,79);
+INSERT INTO student_exam  VALUES ('UCSE19056',8,85);
+
+
+
+INSERT INTO study_material  VALUES (1000,101,'T004','PPT');
+INSERT INTO study_material  VALUES (1001,102,'T004','Book pdf');
+INSERT INTO study_material  VALUES (5000,201,'T003','PPT');
+INSERT INTO study_material  VALUES (7000,301,'T001','PPTX');
+INSERT INTO study_material  VALUES (8000,401,'T002','PPT');
+
+INSERT INTO lecture  VALUES (1111,101,'UCSE21001','T004','Normalisation');
+INSERT INTO lecture  VALUES (1112,102,'UCSE20003','T004','Data Segreration');
+INSERT INTO lecture  VALUES (2222,201,'UCSE22017','T003','Human Body');
+INSERT INTO lecture  VALUES (3333,301,'UCSE21034','T001','Electronic circuit');
+
+INSERT INTO assignment  VALUES (0111,101,'2023-4-11');
+INSERT INTO assignment  VALUES (0222,201,'2023-4-15');
+INSERT INTO assignment  VALUES (0333,303,'2023-6-19');
+
+
+
+INSERT INTO assignment_marks  VALUES (0111,'UCSE21001',100, 95);
+INSERT INTO assignment_marks  VALUES (0222,'UCSE22017',100, 98);
+INSERT INTO assignment_marks  VALUES (0333,'UCSE21002',100, 99);
